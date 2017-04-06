@@ -95,16 +95,25 @@ public class OicRepository implements IOicRepository {
 
     @Override
     public List<Oic> getByDepartments() {
-        String sql = "SELECT ОИС.`ID ОИС`, ОИС.`Название ОИС`, ОИС.`Номер охранного документа`," +
+        String sql = "SELECT ОИС.`ID ОИС`, ОИС.`Название ОИС`, ОИС.`Номер охранного документа`, " +
                 "`Типы ОИС`.`Тип (кратко)`, ОИС.`Дата выдачи`, " +
-                "Подразделения.`Название длинное`+' ('+Подразделения.`Название краткое`+')' AS Подразделение," +
-                "ОИС.Авторы" +
+                "Подразделения.`Название длинное`+' ('+Подразделения.`Название краткое`+')' AS Подразделение, " +
+                "ОИС.Авторы " +
                 "FROM `Типы ОИС` " +
-                "INNER JOIN (ОИС LEFT JOIN " +
-                "(Подразделения RIGHT JOIN ОИС_Подразделения ON Подразделения.`ID подразделения`=ОИС_Подразделения.`ID подразделения`) " +
-                "ON ОИС.`ID ОИС`=ОИС_Подразделения.`ID ОИС`) ON `Типы ОИС`.`ID типа ОИС`=ОИС.`ID типа ОИС` " +
+                "INNER JOIN (ОИС LEFT JOIN (Подразделения RIGHT JOIN ОИС_Подразделения ON Подразделения.`ID подразделения`=ОИС_Подразделения.`ID подразделения`) " +
+                "ON ОИС.`ID ОИС`=ОИС_Подразделения.`ID ОИС`) ON `Типы ОИС`.`ID типа ОИС`=ОИС.`ID типа ОИС`" +
                 "ORDER BY Подразделения.`Название длинное`, ОИС.`ID ОИС`";
-        List<Oic> oicList = jdbcTemplate.query(sql, OicRepository::mapOic);
+        List<Oic> oicList = jdbcTemplate.query(sql, (rs,num)->{
+            Oic oic = new Oic();
+            oic.setNumber(rs.getLong("ID ОИС"));
+            oic.setName(rs.getString("Название ОИС"));
+            oic.setDocNum(rs.getString("Номер охранного документа"));
+            oic.setType(rs.getString("Тип (кратко)"));
+            oic.setDepartment(rs.getString("Подразделение"));
+            oic.setDeliveryDate(rs.getDate("Дата выдачи"));
+            oic.setAuthors(rs.getString("Авторы"));
+            return oic;
+        });
         return oicList;
     }
 
