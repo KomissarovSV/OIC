@@ -1,9 +1,11 @@
 package oic.controller;
 
 import oic.entity.Oic;
+import oic.entity.OicModal;
 import oic.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -66,5 +68,10 @@ public class CardRestController {
     public List<Oic> getOicInActive(HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
         return cardService.getOicInActive();
+    }
+    @RequestMapping(value = "oic",method = GET)
+    public OicModal getOicInActive(HttpServletResponse response, @RequestParam long id){
+        response.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
+        return cardService.getOicModal(id);
     }
 }

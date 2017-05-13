@@ -1,6 +1,7 @@
 package oic.service;
 
 import oic.entity.Oic;
+import oic.entity.OicModal;
 import oic.repository.interfaces.IOicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,5 +42,8 @@ public class CardService {
     }
     public List<Oic> getOicInActive(){
         return oicRepository.getInActive();
+    }
+    public OicModal getOicModal(long id){
+        return oicRepository.getOicModal(id);
     }
 }

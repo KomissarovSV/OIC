@@ -1,6 +1,8 @@
 package oic.repository.interfaces;
 
 import oic.entity.Oic;
+import oic.entity.OicModal;
+
 import java.util.List;
 
 public interface IOicRepository {
@@ -14,4 +16,5 @@ public interface IOicRepository {
     List<Oic> getByRnD();
     List<Oic> getByDepartments();
     List<Oic> getInActive();
+    OicModal getOicModal(long id);
 }

@@ -1,6 +1,7 @@
 package oic.repository;
 
 import oic.entity.Oic;
+import oic.entity.OicModal;
 import oic.repository.interfaces.IOicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -122,5 +123,48 @@ public class OicRepository implements IOicRepository {
         String where = "ОИС.Действующий=FALSE";
         List<Oic> oicList = jdbcTemplate.query(String.format(sql,where), OicRepository::mapOic);
         return oicList;
+    }
+
+    @Override
+    public OicModal getOicModal(long id) {
+        List<OicModal> list = jdbcTemplate.query("SELECT * FROM оис LEFT JOIN `типы оис` ON оис.`ID типа ОИС`= `типы оис`.`ID типа ОИС` " +
+                "LEFT JOIN `основания` ON оис.`Тип основания`=`основания`.`ID основания` " +
+                "WHERE оис.`ID ОИС` = ?",new Object[] {id}, (rs, n) -> {
+            OicModal oicModal = new OicModal();
+            oicModal.setNumber(rs.getLong("ID ОИС"));
+            oicModal.setName(rs.getString("Название ОИС"));
+            oicModal.setActive(rs.getBoolean("Действующий"));
+            oicModal.setTypeOic(rs.getString("Тип (кратко)"));
+            oicModal.setTypeOsnov(rs.getString("Наименование"));
+
+            oicModal.setPriorityDate(rs.getDate("Дата приоритета"));
+            oicModal.setDeliveryDate(rs.getDate("Дата выдачи"));
+            oicModal.setTakeDate(rs.getDate("Дата получения"));
+            oicModal.setDuration(rs.getDate("Срок действия"));
+
+            oicModal.setSecDocNum(rs.getString("Номер охранного документа"));
+            oicModal.setBelNum(rs.getString("Номер бюллетеня"));
+            oicModal.setInnerNumZaiv(rs.getLong("ID заявки"));
+            oicModal.setInnerDeloNum(rs.getString("Номер внутреннего дела"));
+            oicModal.setShifr(rs.getString("Шифр МПК"));
+
+            oicModal.setHasContracts(rs.getBoolean("В договорах"));
+            oicModal.setHasRND(rs.getBoolean("Связан с НИР"));
+            oicModal.setHasFond(rs.getBoolean("В уставном фонде"));
+
+            oicModal.setHasBalance(rs.getBoolean("На балансе"));
+            oicModal.setPostan(rs.getDate("Дата постановки на баланс"));
+            oicModal.setCost(rs.getDouble("Балансовая стоимость"));
+
+            oicModal.setBalanceNote(rs.getString("Примечания по балансу"));
+            oicModal.setRightNote(rs.getString("Примечания по МП"));
+            oicModal.setContactNote(rs.getString("Контакты"));
+            oicModal.setGeneralNote(rs.getString("Примечания"));
+            oicModal.setReferat(rs.getString("Реферат"));
+
+            oicModal.setAuthors(rs.getString("Авторы"));
+            return oicModal;
+        });
+        return list.get(0);
     }
 }
