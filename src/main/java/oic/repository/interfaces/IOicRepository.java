@@ -2,6 +2,8 @@ package oic.repository.interfaces;
 
 import oic.entity.Oic;
 import oic.entity.OicModal;
+import oic.entity.OicOsnov;
+import oic.entity.OicType;
 
 import java.util.List;
 
@@ -17,4 +19,7 @@ public interface IOicRepository {
     List<Oic> getByDepartments();
     List<Oic> getInActive();
     OicModal getOicModal(long id);
+    List<OicType> getTypes();
+    List<OicOsnov> getOsnov();
+    void update(OicModal oicModal);
 }

@@ -2,15 +2,19 @@ package oic.controller;
 
 import oic.entity.Oic;
 import oic.entity.OicModal;
+import oic.entity.OicOsnov;
+import oic.entity.OicType;
 import oic.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @RequestMapping("card")
@@ -73,5 +77,23 @@ public class CardRestController {
     public OicModal getOicInActive(HttpServletResponse response, @RequestParam long id){
         response.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
         return cardService.getOicModal(id);
+    }
+
+    @RequestMapping(value = "oic/types",method = GET)
+    public List<OicType> getTypes(HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
+        return cardService.getTypes();
+    }
+
+    @RequestMapping(value = "oic/osnov",method = GET)
+    public List<OicOsnov> getOsnov(HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
+        return cardService.getOsnov();
+    }
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "oic",method = POST)
+    public ResponseEntity<?> saveOic(@RequestBody OicModal oicModal){
+        cardService.updateOic(oicModal);
+        return ResponseEntity.noContent().build();
     }
 }

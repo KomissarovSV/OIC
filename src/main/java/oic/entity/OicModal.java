@@ -6,11 +6,11 @@ import java.util.Date;
 @Data
 public class OicModal {
 
-    private long number;
+    private Long number;
     private String name;
     private Boolean active;
-    private String typeOic;
-    private String typeOsnov;
+    private Long typeOic;
+    private Long typeOsnov;
 
     private Date priorityDate;
     private Date deliveryDate;

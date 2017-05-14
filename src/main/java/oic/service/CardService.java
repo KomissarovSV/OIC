@@ -2,6 +2,8 @@ package oic.service;
 
 import oic.entity.Oic;
 import oic.entity.OicModal;
+import oic.entity.OicOsnov;
+import oic.entity.OicType;
 import oic.repository.interfaces.IOicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,5 +47,17 @@ public class CardService {
     }
     public OicModal getOicModal(long id){
         return oicRepository.getOicModal(id);
+    }
+
+    public List<OicType> getTypes(){
+        return oicRepository.getTypes();
+    }
+
+    public List<OicOsnov> getOsnov(){
+        return oicRepository.getOsnov();
+    }
+
+    public void updateOic(OicModal oicModal){
+        oicRepository.update(oicModal);
     }
 }

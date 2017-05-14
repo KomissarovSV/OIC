@@ -2,6 +2,8 @@ package oic.repository;
 
 import oic.entity.Oic;
 import oic.entity.OicModal;
+import oic.entity.OicOsnov;
+import oic.entity.OicType;
 import oic.repository.interfaces.IOicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -127,15 +129,14 @@ public class OicRepository implements IOicRepository {
 
     @Override
     public OicModal getOicModal(long id) {
-        List<OicModal> list = jdbcTemplate.query("SELECT * FROM оис LEFT JOIN `типы оис` ON оис.`ID типа ОИС`= `типы оис`.`ID типа ОИС` " +
-                "LEFT JOIN `основания` ON оис.`Тип основания`=`основания`.`ID основания` " +
+        List<OicModal> list = jdbcTemplate.query("SELECT * FROM оис  " +
                 "WHERE оис.`ID ОИС` = ?",new Object[] {id}, (rs, n) -> {
             OicModal oicModal = new OicModal();
             oicModal.setNumber(rs.getLong("ID ОИС"));
             oicModal.setName(rs.getString("Название ОИС"));
             oicModal.setActive(rs.getBoolean("Действующий"));
-            oicModal.setTypeOic(rs.getString("Тип (кратко)"));
-            oicModal.setTypeOsnov(rs.getString("Наименование"));
+            oicModal.setTypeOic(rs.getLong("ID типа ОИС"));
+            oicModal.setTypeOsnov(rs.getLong("Тип основания"));
 
             oicModal.setPriorityDate(rs.getDate("Дата приоритета"));
             oicModal.setDeliveryDate(rs.getDate("Дата выдачи"));
@@ -166,5 +167,88 @@ public class OicRepository implements IOicRepository {
             return oicModal;
         });
         return list.get(0);
+    }
+
+    @Override
+    public List<OicType> getTypes() {
+        List<OicType> types = jdbcTemplate.query("SELECT * FROM `типы оис`", (rs, n) -> {
+            OicType oicType = new OicType();
+            oicType.setTypeId(rs.getLong("ID типа ОИС"));
+            oicType.setCategoryId(rs.getLong("ID категории"));
+            oicType.setName(rs.getString("Название типа ОИС"));
+            oicType.setShortName(rs.getString("Тип (кратко)"));
+            return oicType;
+        });
+        return types;
+    }
+
+    @Override
+    public List<OicOsnov> getOsnov() {
+        List<OicOsnov> list = jdbcTemplate.query("SELECT * FROM основания", (rs, n) -> {
+            OicOsnov oicOsnov = new OicOsnov();
+            oicOsnov.setId(rs.getLong("ID основания"));
+            oicOsnov.setName(rs.getString("Наименование"));
+            return oicOsnov;
+        });
+        return list;
+    }
+
+    @Override
+    public void update(OicModal oicModal) {
+        Object[] params = {
+                oicModal.getName(),
+                oicModal.getActive(),
+                oicModal.getTypeOic(),
+                oicModal.getTypeOsnov(),
+                oicModal.getPriorityDate(),
+                oicModal.getDeliveryDate(),
+                oicModal.getTakeDate(),
+                oicModal.getDuration(),
+                oicModal.getSecDocNum(),
+                oicModal.getBelNum(),
+                oicModal.getInnerNumZaiv(),
+                oicModal.getInnerDeloNum(),
+                oicModal.getShifr(),
+                oicModal.getHasContracts(),
+                oicModal.getHasRND(),
+                oicModal.getHasFond(),
+                oicModal.getHasBalance(),
+                oicModal.getPostan(),
+                oicModal.getCost(),
+                oicModal.getBalanceNote(),
+                oicModal.getRightNote(),
+                oicModal.getContactNote(),
+                oicModal.getGeneralNote(),
+                oicModal.getReferat(),
+                oicModal.getAuthors(),
+                oicModal.getNumber(),
+        };
+        jdbcTemplate.update("UPDATE оис " +
+                "SET `Название ОИС`= ?," +
+                "`Действующий`= ?," +
+                "`ID типа ОИС`= ?," +
+                "`Тип основания`= ?," +
+                "`Дата приоритета`= ?," +
+                "`Дата выдачи`= ?," +
+                "`Дата получения`= ?," +
+                "`Срок действия`= ?," +
+                "`Номер охранного документа`= ?," +
+                "`Номер бюллетеня`= ?," +
+                "`ID заявки`= ?," +
+                "`Номер внутреннего дела`= ?," +
+                "`Шифр МПК`= ?," +
+                "`В договорах`= ?," +
+                "`Связан с НИР`= ?," +
+                "`В уставном фонде`= ?," +
+                "`На балансе`= ?," +
+                "`Дата постановки на баланс`= ?," +
+                "`Балансовая стоимость`= ?," +
+                "`Примечания по балансу`= ?," +
+                "`Примечания по МП`= ?," +
+                "`Контакты`= ?," +
+                "`Примечания`= ?," +
+                "`Реферат`= ?," +
+                "`Авторы`= ? " +
+                "WHERE `ID ОИС`= ?",params);
     }
 }
