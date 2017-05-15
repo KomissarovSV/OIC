@@ -4,6 +4,7 @@ import oic.entity.Oic;
 import oic.entity.OicModal;
 import oic.entity.OicOsnov;
 import oic.entity.OicType;
+import oic.entity.tree.GRNTI;
 import oic.repository.interfaces.IOicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -223,7 +224,7 @@ public class OicRepository implements IOicRepository {
                 oicModal.getAuthors(),
                 oicModal.getNumber(),
         };
-        jdbcTemplate.update("UPDATE оис " +
+        String sql = "UPDATE оис " +
                 "SET `Название ОИС`= ?," +
                 "`Действующий`= ?," +
                 "`ID типа ОИС`= ?," +
@@ -249,6 +250,82 @@ public class OicRepository implements IOicRepository {
                 "`Примечания`= ?," +
                 "`Реферат`= ?," +
                 "`Авторы`= ? " +
-                "WHERE `ID ОИС`= ?",params);
+                "WHERE `ID ОИС`= ?";
+        jdbcTemplate.update(sql,params);
+    }
+
+    @Override
+    public void create(OicModal oicModal) {
+        Object[] params = {
+                oicModal.getName(),
+                oicModal.getActive(),
+                oicModal.getTypeOic(),
+                oicModal.getTypeOsnov(),
+                oicModal.getPriorityDate(),
+                oicModal.getDeliveryDate(),
+                oicModal.getTakeDate(),
+                oicModal.getDuration(),
+                oicModal.getSecDocNum(),
+                oicModal.getBelNum(),
+                oicModal.getInnerNumZaiv(),
+                oicModal.getInnerDeloNum(),
+                oicModal.getShifr(),
+                oicModal.getHasContracts(),
+                oicModal.getHasRND(),
+                oicModal.getHasFond(),
+                oicModal.getHasBalance(),
+                oicModal.getPostan(),
+                oicModal.getCost(),
+                oicModal.getBalanceNote(),
+                oicModal.getRightNote(),
+                oicModal.getContactNote(),
+                oicModal.getGeneralNote(),
+                oicModal.getReferat(),
+                oicModal.getAuthors(),
+        };
+        String maxSQL = "SELECT max(`ID ОИС`) + 1 AS max FROM ОИС";
+        long max = jdbcTemplate.query(maxSQL, (rs, n) -> rs.getLong("max")).get(0);
+        String sql = "INSERT INTO оис " +
+                "(`Название ОИС`," +
+                "`Действующий`," +
+                "`ID типа ОИС`," +
+                "`Тип основания`," +
+                "`Дата приоритета`," +
+                "`Дата выдачи`," +
+                "`Дата получения`," +
+                "`Срок действия`," +
+                "`Номер охранного документа`," +
+                "`Номер бюллетеня`," +
+                "`ID заявки`," +
+                "`Номер внутреннего дела`," +
+                "`Шифр МПК`," +
+                "`В договорах`," +
+                "`Связан с НИР`," +
+                "`В уставном фонде`," +
+                "`На балансе`," +
+                "`Дата постановки на баланс`," +
+                "`Балансовая стоимость`," +
+                "`Примечания по балансу`," +
+                "`Примечания по МП`," +
+                "`Контакты`," +
+                "`Примечания`," +
+                "`Реферат`," +
+                "`Авторы`," +
+                "`ID ОИС`) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?," + max + ")";
+        jdbcTemplate.update(sql,params);
+    }
+
+    @Override
+    public List<GRNTI> getGRNTI() {
+        List<GRNTI> query = jdbcTemplate.query("SELECT * FROM грнти", (rs, n) -> {
+            GRNTI grnti = new GRNTI();
+            grnti.setId(rs.getLong("ID шифра ГРНТИ"));
+            grnti.setShifr(rs.getString("Шифр ГРНТИ"));
+            grnti.setParent(rs.getLong("Предок"));
+            grnti.setName(rs.getString("Наименование"));
+            return grnti;
+        });
+        return query;
     }
 }

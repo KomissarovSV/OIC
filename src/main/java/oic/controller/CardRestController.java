@@ -4,20 +4,20 @@ import oic.entity.Oic;
 import oic.entity.OicModal;
 import oic.entity.OicOsnov;
 import oic.entity.OicType;
+import oic.entity.tree.Node;
+import oic.entity.tree.Tree;
 import oic.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.List;
-
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @RestController
-@RequestMapping("card")
+@RequestMapping("api/card")
 public class CardRestController {
 
     @Autowired
@@ -91,9 +91,22 @@ public class CardRestController {
         return cardService.getOsnov();
     }
     @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(value = "oic",method = POST)
+    @RequestMapping(value = "oic",method = PUT)
     public ResponseEntity<?> saveOic(@RequestBody OicModal oicModal){
         cardService.updateOic(oicModal);
         return ResponseEntity.noContent().build();
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "oic",method = POST)
+    public ResponseEntity<?> createOic(@RequestBody OicModal oicModal){
+        cardService.createOic(oicModal);
+        return ResponseEntity.noContent().build();
+    }
+
+    @RequestMapping(value = "oic/tree",method = GET)
+    public List<Node> getTree(HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
+        return cardService.getTree().getNodes();
     }
 }

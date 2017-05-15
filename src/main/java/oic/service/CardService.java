@@ -4,6 +4,9 @@ import oic.entity.Oic;
 import oic.entity.OicModal;
 import oic.entity.OicOsnov;
 import oic.entity.OicType;
+import oic.entity.tree.GRNTI;
+import oic.entity.tree.Node;
+import oic.entity.tree.Tree;
 import oic.repository.interfaces.IOicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,5 +62,21 @@ public class CardService {
 
     public void updateOic(OicModal oicModal){
         oicRepository.update(oicModal);
+    }
+
+    public void createOic(OicModal oicModal){
+        oicRepository.create(oicModal);
+    }
+
+    public Tree getTree(){
+        Tree tree = new Tree();
+        List<GRNTI> list = oicRepository.getGRNTI();
+        for (GRNTI grnti : list) {
+            Node node = new Node();
+            node.setGrnti(grnti);
+            node.setText(grnti.getShifr() + " " + grnti.getName());
+            tree.addNode(node);
+        }
+        return tree;
     }
 }

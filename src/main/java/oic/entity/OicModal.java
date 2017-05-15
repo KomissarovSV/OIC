@@ -19,7 +19,7 @@ public class OicModal {
 
     private String secDocNum;
     private String belNum;
-    private Long innerNumZaiv;
+    private Long innerNumZaiv = 0L;
     private String innerDeloNum;
     private String shifr;
 

@@ -4,6 +4,7 @@ import oic.entity.Oic;
 import oic.entity.OicModal;
 import oic.entity.OicOsnov;
 import oic.entity.OicType;
+import oic.entity.tree.GRNTI;
 
 import java.util.List;
 
@@ -22,4 +23,6 @@ public interface IOicRepository {
     List<OicType> getTypes();
     List<OicOsnov> getOsnov();
     void update(OicModal oicModal);
+    void create(OicModal oicModal);
+    List<GRNTI> getGRNTI();
 }
