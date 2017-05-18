@@ -328,4 +328,17 @@ public class OicRepository implements IOicRepository {
         });
         return query;
     }
+
+    @Override
+    public List<GRNTI> getGRNTI(long parentId) {
+        List<GRNTI> query = jdbcTemplate.query("SELECT * FROM грнти WHERE `Предок`=?", (rs, n) -> {
+            GRNTI grnti = new GRNTI();
+            grnti.setId(rs.getLong("ID шифра ГРНТИ"));
+            grnti.setShifr(rs.getString("Шифр ГРНТИ"));
+            grnti.setParent(rs.getLong("Предок"));
+            grnti.setName(rs.getString("Наименование"));
+            return grnti;
+        },new Object[]{parentId});
+        return query;
+    }
 }

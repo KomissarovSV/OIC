@@ -11,6 +11,7 @@ import oic.repository.interfaces.IOicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CardService {
@@ -70,13 +71,16 @@ public class CardService {
 
     public Tree getTree(){
         Tree tree = new Tree();
-        List<GRNTI> list = oicRepository.getGRNTI();
+        List<GRNTI> list = oicRepository.getGRNTI(0);
         for (GRNTI grnti : list) {
-            Node node = new Node();
-            node.setGrnti(grnti);
-            node.setText(grnti.getShifr() + " " + grnti.getName());
+            Node node = new Node(grnti);
             tree.addNode(node);
         }
         return tree;
+    }
+
+    public List<Node> getNodes(long parentId){
+        List<GRNTI> list = oicRepository.getGRNTI(parentId);
+        return list.stream().map(Node::new).collect(Collectors.toList());
     }
 }

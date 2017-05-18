@@ -8,13 +8,15 @@ import java.util.List;
 @Data
 public class Tree {
 
-    private List<Node> nodes = new ArrayList<>();
+    private List<Node> data = new ArrayList<>();
+    private Boolean showBorder = false;
+    private Integer levels = 1;
 
     public void addNode(Node node){
         if (node.getGrnti().getParent() == 0){
-            nodes.add(node);
+            data.add(node);
         }else {
-            for (Node rootNode : nodes) {
+            for (Node rootNode : data) {
                 if (rootNode.addChild(node)){
                     break;
                 }

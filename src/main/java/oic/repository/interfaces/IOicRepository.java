@@ -25,4 +25,5 @@ public interface IOicRepository {
     void update(OicModal oicModal);
     void create(OicModal oicModal);
     List<GRNTI> getGRNTI();
+    List<GRNTI> getGRNTI(long parentId);
 }

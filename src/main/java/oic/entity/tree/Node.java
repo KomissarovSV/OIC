@@ -9,9 +9,17 @@ import java.util.List;
 public class Node {
     private GRNTI grnti;
     private String text;
-    private List<Node> nodes = new ArrayList<>();
-    private State state = new State();
-    private Boolean lazyLoad = false;
+    private List<Node> nodes;
+    private State state;
+    private Boolean lazyLoad;
+
+    public Node(GRNTI grnti){
+        this.grnti = grnti;
+        this.text = grnti.getShifr() + " " + grnti.getName();
+        this.nodes = new ArrayList<>();
+        this.state = new State();
+        this.lazyLoad = true;
+    }
 
     public boolean addChild(Node child){
         if (grnti.getId().equals(child.getGrnti().getParent())){

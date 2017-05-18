@@ -12,9 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping("api/card")
@@ -105,8 +103,14 @@ public class CardRestController {
     }
 
     @RequestMapping(value = "oic/tree",method = GET)
-    public List<Node> getTree(HttpServletResponse response){
+    public @ResponseBody Tree getTree(HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
-        return cardService.getTree().getNodes();
+        return cardService.getTree();
+    }
+
+    @RequestMapping(value = "oic/nodes",method = GET)
+    public List<Node> getTree(HttpServletResponse response,@RequestParam long id){
+        response.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
+        return cardService.getNodes(id);
     }
 }
