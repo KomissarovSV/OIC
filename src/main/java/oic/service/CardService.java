@@ -83,4 +83,12 @@ public class CardService {
         List<GRNTI> list = oicRepository.getGRNTI(parentId);
         return list.stream().map(Node::new).collect(Collectors.toList());
     }
+
+    public void addGrnti(long oicId, long grntiId){
+        oicRepository.addGrnti(oicId,grntiId);
+    }
+
+    public void deleteGrnti(long oicId, long grntiId) {
+        oicRepository.deleteGrnti(oicId,grntiId);
+    }
 }

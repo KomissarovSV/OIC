@@ -113,4 +113,16 @@ public class CardRestController {
         response.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
         return cardService.getNodes(id);
     }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "oic/grnti",method = POST)
+    public void addGrnti(@RequestParam long oicId,@RequestParam long grntiId){
+        cardService.addGrnti(oicId,grntiId);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(value = "oic/grnti",method = PUT)
+    public void deleteGrnti(@RequestParam long oicId,@RequestParam long grntiId){
+        cardService.deleteGrnti(oicId,grntiId);
+    }
 }

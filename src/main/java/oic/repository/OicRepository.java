@@ -359,4 +359,18 @@ public class OicRepository implements IOicRepository {
         },new Object[]{id});
         return grntis;
     }
+
+    public void addGrnti(long oicId,long grntiId){
+        String sql = "INSERT INTO оис_грнти (`ID шифра ГРНТИ`,`ID ОИС`,действует)" +
+                        "VALUES(?,?,?)";
+        jdbcTemplate.update(sql,new Object[]{grntiId,oicId,true});
+    }
+
+    @Override
+    public void deleteGrnti(long oicId, long grntiId) {
+        String sql = "DELETE FROM оис_грнти " +
+                    "WHERE `ID шифра ГРНТИ`=? and `ID ОИС`=?";
+        jdbcTemplate.update(sql,new Object[]{grntiId,oicId});
+    }
+
 }
