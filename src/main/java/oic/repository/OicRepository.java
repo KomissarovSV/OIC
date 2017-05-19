@@ -167,7 +167,9 @@ public class OicRepository implements IOicRepository {
             oicModal.setAuthors(rs.getString("Авторы"));
             return oicModal;
         });
-        return list.get(0);
+        OicModal oicModal = list.get(0);
+        oicModal.setGrntiList(getGrntiByOic(id));
+        return oicModal;
     }
 
     @Override
@@ -340,5 +342,21 @@ public class OicRepository implements IOicRepository {
             return grnti;
         },new Object[]{parentId});
         return query;
+    }
+
+    private List<GRNTI> getGrntiByOic(long id){
+        String sql = "SELECT * FROM оис " +
+                        "LEFT JOIN оис_грнти ON оис.`ID ОИС`= оис_грнти.`ID ОИС` " +
+                        "LEFT JOIN грнти ON оис_грнти.`ID шифра ГРНТИ`=грнти.`ID шифра ГРНТИ`" +
+                        "WHERE оис.`ID ОИС`=?";
+        List<GRNTI> grntis = jdbcTemplate.query(sql,(rs,num) ->{
+            GRNTI grnti = new GRNTI();
+            grnti.setId(rs.getLong("ID шифра ГРНТИ"));
+            grnti.setShifr(rs.getString("Шифр ГРНТИ"));
+            grnti.setParent(rs.getLong("Предок"));
+            grnti.setName(rs.getString("Наименование"));
+            return grnti;
+        },new Object[]{id});
+        return grntis;
     }
 }

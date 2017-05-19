@@ -1,7 +1,10 @@
 package oic.entity;
 
 import lombok.Data;
+import oic.entity.tree.GRNTI;
+
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class OicModal {
@@ -38,4 +41,6 @@ public class OicModal {
     private String referat;
 
     private String authors;
+
+    private List<GRNTI> grntiList;
 }
